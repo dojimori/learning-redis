@@ -99,7 +99,7 @@ app.get('/leaderboard/:name', async (req, res) => {
     const result = await redis.zRevRank('leaderboard', name);
     if (typeof result == NaN) return res.status(404).json({ message: 'user does not exists.' });
 
-    res.status(200).send(`${name} is rank ${result + 1}`); // its zero-based, to i added 1
+    res.status(200).send(`${name} is rank ${result + 1}`); // its zero-based, so i added 1
   } catch (error) {
     console.log(error)
     res.status(500).send(error)
