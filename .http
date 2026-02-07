@@ -1,0 +1,7 @@
+POST http://localhost:3000/leaderboard
+Content-Type: application/json
+
+{
+  "score": 55,
+  "player": "wewew"
+}
