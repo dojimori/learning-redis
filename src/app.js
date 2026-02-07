@@ -36,7 +36,7 @@ app.post('/leaderboard', async (req, res) => {
  */
 app.get('/leaderboard', async (req, res) => {
   try {
-    const result = await redis.zRangeWithScores('leaderboard', 0, -1);
+    const result = await redis.zRangeWithScores('leaderboard', 0, -1, { REV: true });
     res.status(200).json({ result });
 
   } catch (error) {
