@@ -45,6 +45,21 @@ app.get('/leaderboard', async (req, res) => {
   }
 })
 
+/**
+ * @route GET /leaderboard/score-range
+ * @description retrieve members within a score range
+*/
+app.get('/leaderboard/score-range', async (req, res) => {
+  try {
+    // returns score between 0 and 20
+    const results = await redis.zRangeByScore('leaderboard', 0, 20);
+
+    res.status(200).json({ results });
+  } catch (error) {
+  }
+})
+
+
 app.listen(3000, () => {
   console.log(`http://localhost:3000`)
 })

@@ -2,10 +2,14 @@ POST http://localhost:3000/leaderboard
 Content-Type: application/json
 
 {
-  "score": 2,
-  "player": "user1"
+  "score": 10,
+  "player": "user2"
 }
 
 ### 
 GET http://localhost:3000/leaderboard
 Content-Type: application/json
+
+
+###
+GET http://localhost:3000/leaderboard/score-range
