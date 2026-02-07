@@ -5,10 +5,10 @@ const { createClient } = require('redis')
 const redis = createClient()
 
 redis.on('error', (err) => console.log('Error connecting to Redis', err))
-
 redis.connect().then(() => console.log('Redis connected'))
 
 var app = express();
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
@@ -20,6 +20,17 @@ app.post('/leaderboard', async (req, res) => {
     await redis.zAdd('leaderboard', { score: parseInt(score), value: player });
 
     res.status(200).send('leaderboard updated')
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
+  }
+})
+
+app.get('/leaderboard', async (req, res) => {
+  try {
+    const result = await redis.zRangeWithScores('leaderboard', 0, -1);
+    res.status(200).json({ result });
+
   } catch (error) {
     console.log(error)
     res.status(500).send(error)
