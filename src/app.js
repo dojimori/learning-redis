@@ -12,6 +12,10 @@ var app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
+/**
+ * @route POST /leaderboard
+ * @description add/update record to leaderboard
+ */
 app.post('/leaderboard', async (req, res) => {
   try {
     const { score, player } = req.body;
@@ -26,6 +30,10 @@ app.post('/leaderboard', async (req, res) => {
   }
 })
 
+/**
+ * @route GET /leaderboard
+ * @description fetch  leaderboard records 
+ */
 app.get('/leaderboard', async (req, res) => {
   try {
     const result = await redis.zRangeWithScores('leaderboard', 0, -1);
