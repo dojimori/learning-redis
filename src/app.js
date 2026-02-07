@@ -56,6 +56,27 @@ app.get('/leaderboard/score-range', async (req, res) => {
 
     res.status(200).json({ results });
   } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
+  }
+})
+
+/**
+ * @route DEL /leaderboard/:name
+ * @description remove a record
+*/
+app.delete('/leaderboard/:name', async (req, res) => {
+  try {
+    const name = String(req.params.name);
+
+    if (!name) return res.status(400).json({ message: 'name required.' });
+
+    const result = await redis.zRem('leaderboard', name);
+
+    res.status(200).send(`removed ${result}`);
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
   }
 })
 
