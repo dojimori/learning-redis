@@ -8,7 +8,6 @@ redis.on('error', (err) => console.log('Error connecting to Redis', err))
 redis.connect().then(() => console.log('Redis connected'))
 
 var app = express();
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
@@ -32,7 +31,7 @@ app.post('/leaderboard', async (req, res) => {
 
 /**
  * @route GET /leaderboard
- * @description fetch  leaderboard records 
+ * @description fetch  leaderboard records
  */
 app.get('/leaderboard', async (req, res) => {
   try {
@@ -88,11 +87,11 @@ app.get('/leaderboard/:name', async (req, res) => {
     const name = String(req.params.name);
     if (!name) return res.status(400).json({ message: 'name required.' });
 
-    /* 
+    /*
       zRank fetches in uhhh.. descending order, meaning
       the lesser the score the higher its ranked.
       in this case, i wanna put the user that has the highes score
-      on rank 1, so zRevRank would be the right function to use 
+      on rank 1, so zRevRank would be the right function to use
     */
 
     // const result = await redis.zRank('leaderboard', name);
@@ -106,6 +105,26 @@ app.get('/leaderboard/:name', async (req, res) => {
   }
 })
 
+/**
+ * @route PUT /leaderboard/:name
+ * @description increment score of a user
+*/
+app.put('/leaderboard/:name', async (req, res) => {
+  try {
+    const { incrementBy } = req.body;
+    if (!incrementBy) return res.status(400).json({ message: 'incrementBy required.' });
+
+    const name = String(req.params.name)
+    console.log("name is here", name, incrementBy)
+
+    await redis.zIncrBy('leaderboard', Number(incrementBy), name);
+
+    res.status(200).send(`Score for ${name} is incremented by ${incrementBy}`);
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
+  }
+})
 
 
 app.listen(3000, () => {

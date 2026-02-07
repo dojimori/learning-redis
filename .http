@@ -21,3 +21,11 @@ DELETE  http://localhost:3000/leaderboard/user1
 
 ### FETCH A USER'S RANK
 GET  http://localhost:3000/leaderboard/user2
+
+### INCREMENT 
+PUT http://localhost:3000/leaderboard/user2
+Content-Type: application/json
+
+{
+  "incrementBy": 150
+}
