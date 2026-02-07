@@ -1,3 +1,4 @@
+### ADD OR UPDATE RECORD
 POST http://localhost:3000/leaderboard
 Content-Type: application/json
 
@@ -6,13 +7,17 @@ Content-Type: application/json
   "player": "user2"
 }
 
-### 
+### FETCH ALL
 GET http://localhost:3000/leaderboard
 Content-Type: application/json
 
 
-###
+### FETCH SCORES WITHIN A SCORE RANGE
 GET http://localhost:3000/leaderboard/score-range
 
-###
+### DELETE USER
 DELETE  http://localhost:3000/leaderboard/user1
+
+
+### FETCH A USER'S RANK
+GET  http://localhost:3000/leaderboard/user2

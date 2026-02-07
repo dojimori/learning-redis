@@ -68,7 +68,6 @@ app.get('/leaderboard/score-range', async (req, res) => {
 app.delete('/leaderboard/:name', async (req, res) => {
   try {
     const name = String(req.params.name);
-
     if (!name) return res.status(400).json({ message: 'name required.' });
 
     const result = await redis.zRem('leaderboard', name);
@@ -79,6 +78,34 @@ app.delete('/leaderboard/:name', async (req, res) => {
     res.status(500).send(error)
   }
 })
+
+/**
+ * @route GET /leaderboard/:name
+ * @description get a user's current ranking
+*/
+app.get('/leaderboard/:name', async (req, res) => {
+  try {
+    const name = String(req.params.name);
+    if (!name) return res.status(400).json({ message: 'name required.' });
+
+    /* 
+      zRank fetches in uhhh.. descending order, meaning
+      the lesser the score the higher its ranked.
+      in this case, i wanna put the user that has the highes score
+      on rank 1, so zRevRank would be the right function to use 
+    */
+
+    // const result = await redis.zRank('leaderboard', name);
+    const result = await redis.zRevRank('leaderboard', name);
+    if (typeof result == NaN) return res.status(404).json({ message: 'user does not exists.' });
+
+    res.status(200).send(`${name} is rank ${result + 1}`); // its zero-based, to i added 1
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
+  }
+})
+
 
 
 app.listen(3000, () => {
