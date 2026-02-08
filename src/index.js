@@ -19,6 +19,10 @@ app.use('/hashes', hashesRoute);
 
 // ================ TEST ================ 
 
+/**
+ * @route POST /manga
+ * @description store manga's data inside a hash, and use sorted sets to  sort them by rating
+*/
 app.post('/manga', async (req, res) => {
   try {
     const { author, volumes, isFinished, rating } = req.body;
@@ -43,9 +47,20 @@ app.post('/manga', async (req, res) => {
   }
 })
 
+/**
+ * @route GET /manga
+ * @description retrieve sorted manga by rating with their additional data 
+*/
 app.get('/manga', async (req, res) => {
   try {
+    // the sorted set contains the sorted manga by rating
     const sortedMangas = await redis.zRangeWithScores('mangas', 0, -1, { REV: true });
+
+    /**
+     * the hash contains the additional information of the manga,
+     * the hash is not sorted so we loop through all the sorted manga
+     * and get their information respectively.
+    */
 
     const mangas = await Promise.all(sortedMangas.map(async (manga) => {
       const data = await redis.hGetAll(`manga:${manga.value}`)
