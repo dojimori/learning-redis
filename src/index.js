@@ -45,11 +45,14 @@ app.post('/manga', async (req, res) => {
 
 app.get('/manga', async (req, res) => {
   try {
-    const sortedMangas = await redis.zRangeWithScores('mangas', 0, -1);
+    const sortedMangas = await redis.zRangeWithScores('mangas', 0, -1, { REV: true });
 
     const mangas = await Promise.all(sortedMangas.map(async (manga) => {
       const data = await redis.hGetAll(`manga:${manga.value}`)
-      return data;
+      return {
+        ...data,
+        rating: manga.score
+      };
     }))
 
 
