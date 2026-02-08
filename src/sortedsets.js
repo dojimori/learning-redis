@@ -1,4 +1,5 @@
 const express = require('express')
+const redis = require('./lib/redis')
 
 const router = express.Router()
 

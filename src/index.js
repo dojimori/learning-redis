@@ -1,12 +1,8 @@
 const express = require('express')
-const { createClient } = require('redis')
-
+const redis = require('./lib/redis')
 // routes
 const sortedSetsRoute = require('./sortedsets')
 // end routes
-
-const redis = createClient()
-
 
 redis.on('error', (err) => console.log('Error connecting to Redis', err))
 redis.connect().then(() => console.log('Redis connected'))
