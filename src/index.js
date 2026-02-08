@@ -43,6 +43,22 @@ app.post('/manga', async (req, res) => {
   }
 })
 
+app.get('/manga', async (req, res) => {
+  try {
+    const sortedMangas = await redis.zRangeWithScores('mangas', 0, -1);
+
+    const mangas = await Promise.all(sortedMangas.map(async (manga) => {
+      const data = await redis.hGetAll(`manga:${manga.value}`)
+      return data;
+    }))
+
+
+    res.status(200).json(mangas)
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
+  }
+})
 
 
 app.listen(3000, () => {

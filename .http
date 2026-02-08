@@ -37,3 +37,19 @@ Content-Type: application/json
 ###
 GET http://localhost:3000/hashes
 Content-Type: application/json
+
+
+###
+POST http://localhost:3000/manga
+Content-Type: application/json
+
+{
+  "rating": 1,
+  "isFinished": 1,
+  "volumes": 13,
+  "author": "lmao"
+}
+
+###
+GET http://localhost:3000/manga
+Content-Type: application/json
