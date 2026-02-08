@@ -1,20 +1,12 @@
 const express = require('express')
-const { createClient } = require('redis')
 
-const redis = createClient()
-
-redis.on('error', (err) => console.log('Error connecting to Redis', err))
-redis.connect().then(() => console.log('Redis connected'))
-
-var app = express();
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+const router = express.Router()
 
 /**
  * @route POST /leaderboard
  * @description add/update record to leaderboard
  */
-app.post('/leaderboard', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { score, player } = req.body;
     if (!score || !player) return res.status(400).json({ message: 'score and player required.' });
@@ -32,7 +24,7 @@ app.post('/leaderboard', async (req, res) => {
  * @route GET /leaderboard
  * @description fetch  leaderboard records
  */
-app.get('/leaderboard', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const result = await redis.zRangeWithScores('leaderboard', 0, -1, { REV: true });
     res.status(200).json({ result });
@@ -47,7 +39,7 @@ app.get('/leaderboard', async (req, res) => {
  * @route GET /leaderboard/score-range
  * @description retrieve members within a score range
 */
-app.get('/leaderboard/score-range', async (req, res) => {
+router.get('/score-range', async (req, res) => {
   try {
     // returns score between 0 and 20
     const results = await redis.zRangeByScore('leaderboard', 0, 20);
@@ -63,7 +55,7 @@ app.get('/leaderboard/score-range', async (req, res) => {
  * @route DEL /leaderboard/:name
  * @description remove a record
 */
-app.delete('/leaderboard/:name', async (req, res) => {
+router.delete('/:name', async (req, res) => {
   try {
     const name = String(req.params.name);
     if (!name) return res.status(400).json({ message: 'name required.' });
@@ -81,7 +73,7 @@ app.delete('/leaderboard/:name', async (req, res) => {
  * @route GET /leaderboard/:name
  * @description get a user's current ranking
 */
-app.get('/leaderboard/:name', async (req, res) => {
+router.get('/:name', async (req, res) => {
   try {
     const name = String(req.params.name);
     if (!name) return res.status(400).json({ message: 'name required.' });
@@ -108,7 +100,7 @@ app.get('/leaderboard/:name', async (req, res) => {
  * @route PUT /leaderboard/:name
  * @description increment score of a user
 */
-app.put('/leaderboard/:name', async (req, res) => {
+router.put('/:name', async (req, res) => {
   try {
     const { incrementBy } = req.body;
     if (!incrementBy) return res.status(400).json({ message: 'incrementBy required.' });
@@ -126,6 +118,4 @@ app.put('/leaderboard/:name', async (req, res) => {
 })
 
 
-app.listen(3000, () => {
-  console.log(`http://localhost:3000`)
-})
+export default router;
