@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
     //   }
     // )
 
-    // if u make a request again with the samed collection,
+    // if u make a request again with the same collection,
     // it will/can actually update the field
 
     const result = await redis.hSet(
@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
 
 /**
  * @route GET /hashes
- * @description retreive all records in the hash
+ * @description retrieve all records in the hash
  */
 
 router.get('/', async (req, res) => {
