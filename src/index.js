@@ -2,6 +2,7 @@ const express = require('express')
 const redis = require('./lib/redis')
 // routes
 const sortedSetsRoute = require('./sortedsets')
+const hashesRoute = require('./hashes')
 // end routes
 
 redis.on('error', (err) => console.log('Error connecting to Redis', err))
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: false }))
 
 
 app.use('/leaderboard', sortedSetsRoute);
+app.use('/hashes', hashesRoute);
 
 app.listen(3000, () => {
   console.log(`http://localhost:3000`)

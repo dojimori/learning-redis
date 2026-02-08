@@ -29,3 +29,7 @@ Content-Type: application/json
 {
   "incrementBy": 150
 }
+
+###
+POST http://localhost:3000/hashes
+Content-Type: application/json

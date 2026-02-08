@@ -4,6 +4,7 @@
 
 const express = require('express')
 const router = express.Router()
+const redis = require('./lib/redis')
 
 /**
  * @route POST /hashes
@@ -12,7 +13,15 @@ const router = express.Router()
 
 router.post('/', async (req, res) => {
   try {
-    // const result = await 
+    const result = await redis.hSet(
+      'collection:1',
+      {
+        'id': crypto.randomUUID(),
+        'desc': 'this is a description field for collection 1',
+      }
+    )
+
+    res.status(201).json({ result });
 
   } catch (error) {
     console.log(error)
