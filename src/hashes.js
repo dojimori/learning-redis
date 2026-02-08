@@ -13,13 +13,25 @@ const redis = require('./lib/redis')
 
 router.post('/', async (req, res) => {
   try {
+    // const result = await redis.hSet(
+    //   'collection:1',
+    //   {
+    //     'id': crypto.randomUUID(),
+    //     'desc': 'this is a description field for collection 1',
+    //   }
+    // )
+
+    // if u make a request again with the samed collection,
+    // it will/can actually update the field
+
     const result = await redis.hSet(
-      'collection:1',
+      'collection:2',
       {
         'id': crypto.randomUUID(),
-        'desc': 'this is a description field for collection 1',
+        'desc': 'this is a description field for collection 2',
       }
     )
+
 
     res.status(201).json({ result });
 
@@ -30,5 +42,22 @@ router.post('/', async (req, res) => {
 
 })
 
+
+/**
+ * @route GET /hashes
+ * @description retreive all records in the hash
+ */
+
+router.get('/', async (req, res) => {
+  try {
+    const result = await redis.hGetAll('collection:2')
+    res.status(201).json({ result });
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
+  }
+
+})
 
 module.exports = router;
